@@ -1,0 +1,17 @@
+server:
+  port: 9003
+spring:
+  application:
+    name: briana-mail
+  cloud:
+    config:
+      enabled: false
+    bus:
+      enabled: false
+eureka:
+  client:
+    register-with-eureka: false
+    enabled: false
+encrypt:
+  key: ${ENCRYPT_KEY}
+
