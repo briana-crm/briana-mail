@@ -3,7 +3,6 @@ package by.ttre16.briana.service
 import by.ttre16.briana.configuration.OUTPUT_CHANNEL
 import by.ttre16.briana.model.StreamMessage
 import by.ttre16.briana.model.VerificationStatus
-import org.joda.time.DateTime
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.cloud.stream.function.StreamBridge
 import org.springframework.mail.javamail.JavaMailSender
@@ -11,6 +10,7 @@ import org.springframework.mail.javamail.MimeMessageHelper
 import org.springframework.stereotype.Service
 import org.springframework.web.util.UriComponentsBuilder
 import java.net.URI
+import java.time.LocalDateTime
 import javax.mail.MessagingException
 
 @Service
@@ -62,7 +62,7 @@ class EmailService(
         val confirmationToken = tokenService.getToken(token) ?: return "Invalid confirmation link"
         if (confirmationToken.confirmedAt != null) return "Email already confirmed!"
         confirmationToken.expiredAt
-            .takeIf { it.isAfter(DateTime.now()) }
+            .takeIf { it.isAfter(LocalDateTime.now()) }
             ?: return "Confirmation link expired"
         tokenService.setConfirmedAt(confirmationToken)
         val message = StreamMessage(email = confirmationToken.email, VerificationStatus.VERIFIED)
